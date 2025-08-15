@@ -1,0 +1,16 @@
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_USER: "ate7815"
+      MYSQL_PASSWORD: "ate7815"
+      MYSQL_DATABASE: "desafio-02"
+      MYSQL_ROOT_PASSWORD: "ate7815"
+    ports:
+      - "3306:3306"
+    expose:
+      # Opens port 3306 on the container
+      - "3306"
+    volumes:
+      - \Users\ThiagoLuiz\Documents\programaçao\Rocketseat\Ignite\formacao-python\mysql

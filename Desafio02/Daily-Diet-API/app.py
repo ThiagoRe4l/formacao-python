@@ -23,9 +23,22 @@ def create_meal():
     db.session.commit()
     return jsonify({"message": "Refeição cadastrada com sucesso"})
 
-# @app.route('/meal/<str:name_meal>', methods=['PUT'])
-# def update_meal():
+@app.route('/meal/<int:id_meal>', methods=['PUT'])
+def update_meal(id_meal):
+    data = request.json # Recupera oq o usuario enviou
+    meal = Meal.query.get(id_meal) # Recupera o usuario pelo ID
 
+    if meal and data.get("name") or data.get("description") or data.get("diet"):
+        meal.name = data.get("name")
+        meal.description = data.get("description")
+        meal.diet = data.get("diet")
+        db.session.commit()
+
+        return jsonify({"message": f"Refeição '{meal.name}' atualizada com sucesso."})
+    
+    return jsonify({"message": f"Refeição não encontrada"}), 404
+
+    
 # @app.route('/meal/<str:name_meal>', methods=['DELETE'])
 # def delete_meal():
 

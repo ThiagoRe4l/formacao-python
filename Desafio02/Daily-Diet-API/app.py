@@ -37,21 +37,41 @@ def update_meal(id_meal):
         return jsonify({"message": f"Refeição '{meal.name}' atualizada com sucesso."})
     
     return jsonify({"message": f"Refeição não encontrada"}), 404
-
     
-# @app.route('/meal/<str:name_meal>', methods=['DELETE'])
-# def delete_meal():
+@app.route('/meal/<int:id_meal>', methods=['DELETE'])
+def delete_meal(id_meal):
+    meal = Meal.query.get(id_meal)
 
-# @app.route('/meal', methods=['GET'])
-# def get_meal():
-
-# @app.route('/meal/<str:name_meal>', methods=['GET'])
-# def getById_meal():
+    if meal:
+        db.session.delete(meal)
+        db.session.commit()
+        return jsonify({"message": f"Refeição '{meal.name}' deletada com sucesso."})
     
+    return jsonify({"message": f"Refeição não encontrada."}), 404
 
-@app.route("/hello-world", methods=['GET'])
-def hello_world():
-    return "Hello world"
+@app.route('/meal', methods=['GET'])
+def getAll_meal():
+    meals = Meal.query.order_by(Meal.date.desc()).all()
+
+    if meals:
+        meals_list = [{"id": m.id, "name": m.name, "date": m.date} for m in meals]
+        return  jsonify(meals_list)
+    
+    return jsonify({"message": "Nenhuma refeição encontrada."}), 200
+
+@app.route('/meal/<int:id_meal>', methods=['GET'])
+def getById_meal(id_meal):
+    meal = Meal.query.get(id_meal)
+
+    if meal:
+        meal_dict = {
+            "id": meal.id, 
+            "name": meal.name, 
+            "date": meal.date,
+        }
+        return jsonify(meal_dict)
+    
+    return jsonify({"message": f"Refeição não encontrada"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
